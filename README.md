@@ -24,6 +24,15 @@ saved in your own browser and never sent anywhere.
 
 All amounts are in today's dollars (adjusted for inflation). Tax is a single average rate.
 
+## Using it online
+
+The app is published at **https://bshaw200.github.io/retirement-planner/**. Anyone with the
+link can open it in their browser. Each person's plan and saved scenarios stay in their own
+browser, so family members using the same link never see each other's numbers.
+
+The site updates automatically a minute or two after changes reach the `main` branch
+(see `.github/workflows/deploy.yml`).
+
 ## Running it on your computer
 
 You need [Node.js](https://nodejs.org) 20 or newer.
