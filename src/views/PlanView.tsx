@@ -1,15 +1,15 @@
 import { useMemo } from "react";
 import { cppAdjustmentFactor, oasAnnualAmount } from "../engine/canada";
 import type { Plan } from "../engine/plan";
-import { project, sustainableSpending } from "../engine/projection";
+import { affordableSpending, lateBenefits, project } from "../engine/projection";
 import { BalanceChart, IncomeChart } from "../components/charts";
 import { StatusPill } from "../components/StatusPill";
 import { YearTable } from "../components/YearTable";
-import { money } from "../format";
+import { listNames, money } from "../format";
 
 export function PlanView({ plan }: { plan: Plan }) {
   const projection = useMemo(() => project(plan), [plan]);
-  const affordable = useMemo(() => sustainableSpending(plan), [plan]);
+  const affordable = useMemo(() => affordableSpending(plan), [plan]);
 
   const lasts = projection.runsOutAtAge === null;
   const guaranteed =
@@ -38,15 +38,36 @@ export function PlanView({ plan }: { plan: Plan }) {
         </div>
         <div className="tile">
           <span className="tile-label">You could spend up to</span>
-          <span className="tile-value">
-            {money(affordable)}
-            <small>/yr</small>
-          </span>
-          <span className="tile-note">
-            {affordable >= plan.spending
-              ? `${money(affordable - plan.spending)} more than your goal of ${money(plan.spending)}`
-              : `${money(plan.spending - affordable)} less than your goal of ${money(plan.spending)}`}
-          </span>
+          {affordable.fromAge === null ? (
+            <>
+              <span className="tile-value">
+                {money(affordable.early)}
+                <small>/yr</small>
+              </span>
+              <span className="tile-note">
+                {affordable.early >= plan.spending
+                  ? `${money(affordable.early - plan.spending)} more than your goal of ${money(plan.spending)}`
+                  : `${money(plan.spending - affordable.early)} less than your goal of ${money(plan.spending)}`}
+              </span>
+            </>
+          ) : (
+            <>
+              <span className="tile-value">
+                {money(affordable.early)}
+                <small>/yr until {affordable.fromAge}</small>
+              </span>
+              <span className="tile-value tile-value-step">
+                <small>then </small>
+                {money(affordable.later)}
+                <small>/yr</small>
+              </span>
+              <span className="tile-note">
+                Ages {plan.retirementAge}–{affordable.fromAge - 1} are the tight years.{" "}
+                {listNames(lateBenefits(plan).map((b) => b.name))} won't have started yet, so your savings have to
+                cover those years on their own.
+              </span>
+            </>
+          )}
         </div>
         <div className="tile">
           <span className="tile-label">CPP, OAS and pension from {lastStart}</span>

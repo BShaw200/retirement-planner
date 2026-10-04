@@ -52,6 +52,17 @@ export function HowItWorks() {
           </div>
         )}
 
+        <h3>How much you could spend</h3>
+        <p>
+          The planner looks for the most you could spend each year, after tax, without your savings running out
+          before the end of your plan. It keeps that amount as steady as it can.
+        </p>
+        <p>
+          Sometimes there's a gap between retiring and the start of CPP, OAS or a pension. If your savings can't
+          stretch evenly across that gap, the planner shows two amounts: what your savings can support during
+          the gap, and the higher amount you could spend once those payments start.
+        </p>
+
         <h3>Which savings get spent first</h3>
         <p>
           The planner spends other investments first, then your RRSP/RRIF, and saves your TFSA for last. TFSA

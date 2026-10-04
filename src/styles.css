@@ -293,6 +293,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 4px 0 0;
 .tile-label { color: var(--ink-2); font-size: 0.9rem; font-weight: 600; }
 .tile-value { font-family: var(--font-display); font-size: 1.85rem; line-height: 1.1; }
 .tile-value small { font-family: var(--font-body); font-size: 0.95rem; color: var(--muted); margin-left: 2px; }
+.tile-value-step { font-size: 1.35rem; }
 .tile-note { color: var(--muted); font-size: 0.85rem; }
 
 .assumption-note { margin: 0; color: var(--ink-2); font-size: 0.92rem; max-width: 72ch; }
@@ -345,6 +346,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 4px 0 0;
   white-space: nowrap;
   font-family: var(--font-body);
 }
+.tile .pill { white-space: normal; }
 .pill-good { color: var(--good-ink); }
 .pill-warning { color: var(--warning-ink); }
 .pill-critical { color: var(--critical-ink); }

@@ -25,3 +25,9 @@ function trim(value: number): string {
 export function percent(fraction: number): string {
   return `${Math.round(fraction * 100)}%`;
 }
+
+/** "CPP", "CPP and OAS", "CPP, OAS and your pension" */
+export function listNames(names: string[]): string {
+  if (names.length <= 1) return names.join("");
+  return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+}

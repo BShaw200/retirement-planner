@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { Plan } from "../engine/plan";
-import { project, sustainableSpending } from "../engine/projection";
+import { affordableSpending, project } from "../engine/projection";
 import { simulate } from "../engine/simulation";
 import { CompareChart } from "../components/charts";
 import { StatusPill } from "../components/StatusPill";
@@ -37,7 +37,7 @@ export function CompareView({ plan, scenarios, selected, onSave, onDelete, onLoa
         .map((s) => ({
           ...s,
           projection: project(s.plan),
-          affordable: sustainableSpending(s.plan),
+          affordable: affordableSpending(s.plan),
           success: simulate(s.plan).successRate,
         })),
     [scenarios, selected],
@@ -152,7 +152,14 @@ export function CompareView({ plan, scenarios, selected, onSave, onDelete, onLoa
                       s.projection.runsOutAtAge === null ? `Past ${s.plan.planToAge}` : `Until ${s.projection.runsOutAtAge}`,
                     )}
                   />
-                  <Row label="Could spend up to" values={compared.map((s) => `${money(s.affordable)}/yr`)} />
+                  <Row
+                    label="Could spend up to"
+                    values={compared.map(({ affordable: a }) =>
+                      a.fromAge === null
+                        ? `${money(a.early)}/yr`
+                        : `${money(a.early)}/yr until ${a.fromAge}, then ${money(a.later)}/yr`,
+                    )}
+                  />
                   <tr>
                     <th scope="row">Chance money lasts</th>
                     {compared.map((s) => {

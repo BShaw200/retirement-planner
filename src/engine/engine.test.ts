@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { cppAdjustmentFactor, oasAnnualAmount, rrifMinimumRate } from "./canada";
 import { EXAMPLE_PLAN, type Plan, validatePlan } from "./plan";
-import { project, realReturn, sustainableSpending } from "./projection";
+import { affordableSpending, benefitsStartAge, project, realReturn, sustainableSpending } from "./projection";
 import { simulate } from "./simulation";
 
 const plan = (overrides: Partial<Plan> = {}): Plan => ({ ...EXAMPLE_PLAN, ...overrides });
@@ -72,6 +72,42 @@ describe("projection", () => {
     const best = sustainableSpending(p);
     expect(project(p, undefined, best).runsOutAtAge).toBeNull();
     expect(project(p, undefined, best + 100).runsOutAtAge).not.toBeNull();
+  });
+});
+
+describe("affordable spending with a gap before benefits start", () => {
+  // Retire at 65 with modest savings, but CPP and OAS don't start until 70.
+  const gapPlan = plan({
+    currentAge: 65, retirementAge: 65, planToAge: 95,
+    rrsp: 37_000, tfsa: 0, nonRegistered: 0,
+    cppAt65: 12_000, cppStartAge: 70, oasStartAge: 70, oasYearsInCanada: 40, pension: 0,
+  });
+
+  it("finds the age when the last benefit starts", () => {
+    expect(benefitsStartAge(gapPlan)).toBe(70);
+    expect(benefitsStartAge(plan({ currentAge: 60, retirementAge: 66, cppStartAge: 65, oasStartAge: 65 }))).toBeNull();
+  });
+
+  it("lets spending step up once benefits start", () => {
+    const result = affordableSpending(gapPlan);
+    expect(result.fromAge).toBe(70);
+    expect(result.early).toBeCloseTo(sustainableSpending(gapPlan), 0);
+    expect(result.later).toBeGreaterThan(result.early * 2);
+    const stepped = project(gapPlan, undefined, (age) => (age < 70 ? result.early : result.later));
+    expect(stepped.runsOutAtAge).toBeNull();
+    const tooMuch = project(gapPlan, undefined, (age) => (age < 70 ? result.early : result.later + 200));
+    expect(tooMuch.runsOutAtAge).not.toBeNull();
+  });
+
+  it("keeps one amount when savings easily bridge the gap", () => {
+    const result = affordableSpending({ ...gapPlan, rrsp: 1_500_000 });
+    expect(result.fromAge).toBeNull();
+    expect(result.later).toBe(result.early);
+  });
+
+  it("keeps one amount when benefits start by retirement", () => {
+    const result = affordableSpending({ ...gapPlan, cppStartAge: 65, oasStartAge: 65 });
+    expect(result.fromAge).toBeNull();
   });
 });
 
