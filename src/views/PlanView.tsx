@@ -2,14 +2,18 @@ import { useMemo } from "react";
 import { cppAdjustmentFactor, oasAnnualAmount } from "../engine/canada";
 import type { Plan } from "../engine/plan";
 import { affordableSpending, lateBenefits, project } from "../engine/projection";
+import { simulate } from "../engine/simulation";
 import { BalanceChart, IncomeChart } from "../components/charts";
 import { StatusPill } from "../components/StatusPill";
 import { YearTable } from "../components/YearTable";
-import { listNames, money } from "../format";
+import { listNames, money, percent } from "../format";
+import { savingsStatus } from "../status";
 
 export function PlanView({ plan }: { plan: Plan }) {
   const projection = useMemo(() => project(plan), [plan]);
   const affordable = useMemo(() => affordableSpending(plan), [plan]);
+  // Same runs as the "Will my money last?" tab, so the two percentages always match.
+  const successRate = useMemo(() => simulate(plan).successRate, [plan]);
 
   const lasts = projection.runsOutAtAge === null;
   const guaranteed =
@@ -31,10 +35,11 @@ export function PlanView({ plan }: { plan: Plan }) {
           <span className="tile-value">
             {lasts ? `Past ${plan.planToAge}` : `Until ${projection.runsOutAtAge}`}
           </span>
-          <StatusPill
-            tone={lasts ? "good" : "critical"}
-            label={lasts ? "Covers your plan" : `Runs out ${plan.planToAge - projection.runsOutAtAge! + 1} years early`}
-          />
+          <StatusPill {...savingsStatus(projection.runsOutAtAge, plan.planToAge, successRate)} />
+          <span className="tile-note">
+            In up-and-down markets: <strong className="tile-chance">{percent(successRate)}</strong> chance it
+            lasts. <a href="#risk">See why</a>
+          </span>
         </div>
         <div className="tile">
           <span className="tile-label">You could spend up to</span>
@@ -81,8 +86,8 @@ export function PlanView({ plan }: { plan: Plan }) {
 
       <p className="assumption-note">
         All amounts are in today's dollars, so $1 on these charts buys what $1 buys now. This assumes
-        steady growth of {plan.expectedReturn}% a year. Real markets go up and down; see{" "}
-        <a href="#risk">Will my money last?</a>
+        steady growth of {plan.expectedReturn}% a year. Real markets go up and down, which is what the chance
+        under "Your savings last" accounts for.
       </p>
 
       <section className="panel">

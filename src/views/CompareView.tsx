@@ -5,7 +5,7 @@ import { simulate } from "../engine/simulation";
 import { CompareChart } from "../components/charts";
 import { StatusPill } from "../components/StatusPill";
 import { money, percent } from "../format";
-import { successTone } from "./RiskView";
+import { successTone } from "../status";
 
 export interface Scenario {
   id: string;

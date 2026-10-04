@@ -76,6 +76,11 @@ export function HowItWorks() {
           random good and bad years, and counts how many times your money lasts. It's like checking the weather
           forecast: 85% means 85 out of 100 possible futures worked out.
         </p>
+        <p>
+          On the My plan tab, "Your savings last" only gets a green tick when both checks pass: steady growth
+          lasts, and the chance in up-and-down markets is at least 85%. If steady growth lasts but the chance is
+          lower, you'll see an amber "Little room to spare" instead.
+        </p>
 
         <h3>What it leaves out</h3>
         <ul>

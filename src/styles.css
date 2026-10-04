@@ -273,15 +273,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 4px 0 0;
 /* Results */
 .view { display: flex; flex-direction: column; gap: 20px; }
 
+/* Four tiles sit 4 across, 2 by 2, or stacked, so none is left alone in a row. */
+.results { container-type: inline-size; }
 .tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  grid-template-columns: 1fr;
   gap: 1px;
   background: var(--line);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   overflow: hidden;
 }
+@container (min-width: 460px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+@container (min-width: 900px) { .tiles { grid-template-columns: repeat(4, 1fr); } }
 .tile {
   background: var(--surface);
   padding: 16px 18px;
@@ -294,6 +298,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 4px 0 0;
 .tile-value { font-family: var(--font-display); font-size: 1.85rem; line-height: 1.1; }
 .tile-value small { font-family: var(--font-body); font-size: 0.95rem; color: var(--muted); margin-left: 2px; }
 .tile-value-step { font-size: 1.35rem; }
+.tile-chance { color: var(--ink); }
 .tile-note { color: var(--muted); font-size: 0.85rem; }
 
 .assumption-note { margin: 0; color: var(--ink-2); font-size: 0.92rem; max-width: 72ch; }

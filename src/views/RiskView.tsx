@@ -2,14 +2,9 @@ import { useMemo } from "react";
 import type { Plan } from "../engine/plan";
 import { simulate } from "../engine/simulation";
 import { RiskChart } from "../components/charts";
-import { StatusPill, type Tone } from "../components/StatusPill";
+import { StatusPill } from "../components/StatusPill";
 import { money, percent } from "../format";
-
-export function successTone(rate: number): { tone: Tone; label: string } {
-  if (rate >= 0.85) return { tone: "good", label: "On track" };
-  if (rate >= 0.7) return { tone: "warning", label: "Borderline" };
-  return { tone: "critical", label: "At risk" };
-}
+import { successTone } from "../status";
 
 export function RiskView({ plan }: { plan: Plan }) {
   const result = useMemo(() => simulate(plan), [plan]);
