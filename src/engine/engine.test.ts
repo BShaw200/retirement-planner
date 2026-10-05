@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { cppAdjustmentFactor, oasAnnualAmount, rrifMinimumRate } from "./canada";
-import { EXAMPLE_PLAN, type Plan, validatePlan } from "./plan";
+import { EXAMPLE_PLAN, type Plan, upgradePlan, validatePlan } from "./plan";
 import { affordableSpending, benefitsStartAge, project, realReturn, sustainableSpending } from "./projection";
 import { simulate } from "./simulation";
 
@@ -127,6 +127,16 @@ describe("simulation", () => {
       expect(band.low).toBeLessThanOrEqual(band.median);
       expect(band.median).toBeLessThanOrEqual(band.high);
     }
+  });
+});
+
+describe("saved plans", () => {
+  it("moves a plan on the old OAS default to the current one", () => {
+    expect(upgradePlan(plan({ fullOas: 8_900 })).fullOas).toBe(9_150);
+  });
+
+  it("keeps an OAS figure the person typed in", () => {
+    expect(upgradePlan(plan({ fullOas: 9_000 })).fullOas).toBe(9_000);
   });
 });
 

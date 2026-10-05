@@ -1,3 +1,5 @@
+import { DEFAULT_FULL_OAS, PREVIOUS_DEFAULT_FULL_OAS } from "./canada";
+
 export interface Plan {
   // About you
   currentAge: number;
@@ -55,7 +57,7 @@ export const EXAMPLE_PLAN: Plan = {
   cppStartAge: 65,
   oasYearsInCanada: 40,
   oasStartAge: 65,
-  fullOas: 8_900,
+  fullOas: DEFAULT_FULL_OAS,
 
   pension: 0,
   pensionStartAge: 63,
@@ -66,6 +68,14 @@ export const EXAMPLE_PLAN: Plan = {
   volatility: 11,
   taxRate: 20,
 };
+
+/**
+ * Brings a saved plan up to date. A plan still using the old OAS default gets the
+ * current one; a figure the person typed in themselves is left alone.
+ */
+export function upgradePlan(plan: Plan): Plan {
+  return plan.fullOas === PREVIOUS_DEFAULT_FULL_OAS ? { ...plan, fullOas: DEFAULT_FULL_OAS } : plan;
+}
 
 /** Returns a list of problems that stop the plan from being projected. */
 export function validatePlan(plan: Plan): string[] {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { PlanForm } from "./components/PlanForm";
-import { EXAMPLE_PLAN, type Plan, validatePlan } from "./engine/plan";
+import { EXAMPLE_PLAN, type Plan, upgradePlan, validatePlan } from "./engine/plan";
 import { load, loadList, save } from "./storage";
 import { CompareView, MAX_COMPARED, type Scenario } from "./views/CompareView";
 import { HowItWorks } from "./views/HowItWorks";
@@ -28,9 +28,11 @@ function tabFromHash(): TabId {
 }
 
 export default function App() {
-  const [plan, setPlan] = useState<Plan>(() => load(KEYS.plan, EXAMPLE_PLAN));
+  const [plan, setPlan] = useState<Plan>(() => upgradePlan(load(KEYS.plan, EXAMPLE_PLAN)));
   const [isExample, setIsExample] = useState<boolean>(() => load(KEYS.isExample, { value: true }).value);
-  const [scenarios, setScenarios] = useState<Scenario[]>(() => loadList(KEYS.scenarios));
+  const [scenarios, setScenarios] = useState<Scenario[]>(() =>
+    loadList<Scenario>(KEYS.scenarios).map((s) => ({ ...s, plan: upgradePlan({ ...EXAMPLE_PLAN, ...s.plan }) })),
+  );
   const [selected, setSelected] = useState<string[]>(() => loadList(KEYS.selected));
   const [tab, setTab] = useState<TabId>(tabFromHash);
 

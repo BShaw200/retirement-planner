@@ -1,8 +1,11 @@
 // Canadian retirement rules used by the projection.
 // Dollar amounts are approximate 2026 figures and are editable in the app.
 
-/** Approximate full Old Age Security for ages 65–74, per year. */
-export const DEFAULT_FULL_OAS = 8_900;
+/** Full Old Age Security for ages 65–74, per year ($762.50 a month, October–December 2026). */
+export const DEFAULT_FULL_OAS = 9_150;
+
+/** The default before the October 2026 update, kept so saved plans can be brought up to date. */
+export const PREVIOUS_DEFAULT_FULL_OAS = 8_900;
 
 /** CPP can start between these ages. */
 export const CPP_MIN_AGE = 60;

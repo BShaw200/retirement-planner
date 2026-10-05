@@ -114,7 +114,7 @@ export function PlanForm({ plan, onChange }: PlanFormProps) {
             onChange={set("volatility")} suffix="%" step={1} min={0} max={30}
             help="How much returns swing from year to year. Balanced: about 10%. All stocks: about 16%." />
           <NumberField id="fullOas" label="Full OAS per year" value={plan.fullOas} onChange={set("fullOas")}
-            prefix="$" step={100} help="Ages 65–74, in 2026. Update this if the government changes it." />
+            prefix="$" step={100} help="For ages 65–74: $762.50 a month from October to December 2026. It rises with inflation every three months, so update this now and then." />
         </div>
       </details>
     </form>
